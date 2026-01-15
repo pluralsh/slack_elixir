@@ -17,7 +17,6 @@ defmodule Slack.Supervisor do
 
   @impl true
   def init(bot_config) do
-    app_token = Keyword.fetch!(bot_config, :app_token)
     bot = case Keyword.fetch(bot_config, :bot_config) do
       {:ok, bot} -> bot
       _ ->
