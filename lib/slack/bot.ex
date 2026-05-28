@@ -8,12 +8,13 @@ defmodule Slack.Bot do
           module: module(),
           team_id: String.t(),
           token: String.t(),
-          user_id: String.t()
+          user_id: String.t(),
+          assigns: map() | nil
         }
 
   @derive {Inspect, except: [:token]}
   @enforce_keys [:id, :module, :token, :team_id, :user_id]
-  defstruct [:id, :module, :token, :team_id, :user_id]
+  defstruct [:id, :module, :token, :team_id, :user_id, :assigns]
 
   @doc """
   Handle the event from Slack.
