@@ -29,7 +29,7 @@ defmodule Slack.Socket do
 
   @impl WebSockex
   def handle_connect(_conn, state) do
-    :timer.send_interval(@gc_interval, self(), :gc)
+    :timer.send_interval(@gc_interval, :gc)
     {:ok, state}
   end
 
