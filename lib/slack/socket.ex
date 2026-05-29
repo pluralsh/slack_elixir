@@ -5,6 +5,8 @@ defmodule Slack.Socket do
 
   require Logger
 
+  @gc_interval :timer.minutes(5)
+
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------
@@ -23,6 +25,12 @@ defmodule Slack.Socket do
     Logger.info("[Slack.Socket] connecting...")
 
     WebSockex.start_link(url, __MODULE__, state)
+  end
+
+  @impl WebSockex
+  def handle_connect(_conn, state) do
+    :timer.send_interval(@gc_interval, self(), :gc)
+    {:ok, state}
   end
 
   # ----------------------------------------------------------------------------
@@ -73,6 +81,13 @@ defmodule Slack.Socket do
     Logger.debug("[Slack.Socket] sending #{type} frame with payload: #{msg}")
     {:reply, frame, state}
   end
+
+  @impl WebSockex
+  def handle_info(:gc, state) do
+    :erlang.garbage_collect()
+    {:ok, state}
+  end
+  def handle_info(_, state), do: {:ok, state}
 
   # ----------------------------------------------------------------------------
   # Helpers
