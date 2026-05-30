@@ -37,7 +37,7 @@ defmodule Slack.Supervisor do
       {Slack.Socket, Keyword.put(bot_config, :bot, %{bot | assigns: bot_config[:bot_assigns]})}
     ]
 
-    Supervisor.init(children, strategy: :one_for_one)
+    Supervisor.init(children, [strategy: :one_for_one] ++ (bot_config[:supervisor_args] || []))
   end
 
   def fetch_identity(bot_module, bot_token) do
